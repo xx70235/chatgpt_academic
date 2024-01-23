@@ -27,7 +27,8 @@ from .bridge_chatglm3 import predict as chatglm3_ui
 
 from .bridge_qianfan import predict_no_ui_long_connection as qianfan_noui
 from .bridge_qianfan import predict as qianfan_ui
-
+from .bridge_yshs import predict_no_ui_long_connection as yshs_noui
+from .bridge_yshs import predict as yshs_ui
 colors = ['#FF00FF', '#00FFFF', '#FF0000', '#990099', '#009999', '#990044']
 
 class LazyloadTiktoken(object):
@@ -173,8 +174,14 @@ model_info = {
         "tokenizer": tokenizer_gpt4,
         "token_cnt": get_token_num_gpt4,
     },
-
-
+    "yshs": {
+        "fn_with_ui": yshs_ui,
+        "fn_without_ui": yshs_noui,
+        "endpoint": None,
+        "max_token": 4096,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
     # azure openai
     "azure-gpt-3.5":{
         "fn_with_ui": chatgpt_ui,
@@ -479,6 +486,24 @@ if "spark" in AVAIL_LLM_MODELS:   # 讯飞星火认知大模型
         })
     except:
         print(trimmed_format_exc())
+
+if "yshs" in AVAIL_LLM_MODELS:   # YSHS
+    try:
+        from .bridge_yshs import predict_no_ui_long_connection as yshs_website_noui
+        from .bridge_yshs import predict as yshs_website_ui
+        model_info.update({
+            "yshs": {
+                "fn_with_ui": yshs_website_ui,
+                "fn_without_ui": yshs_website_noui,
+                "endpoint": None,
+                "max_token": 4096,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            }
+        })
+    except:
+        print(trimmed_format_exc())
+
 if "sparkv2" in AVAIL_LLM_MODELS:   # 讯飞星火认知大模型
     try:
         from .bridge_spark import predict_no_ui_long_connection as spark_noui
