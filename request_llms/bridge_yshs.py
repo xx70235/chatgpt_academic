@@ -7,7 +7,17 @@ from multiprocessing import Process, Pipe
 import yshs
 import os, sys
 
-model_name = 'openai/gpt-4'
+
+# class GPT4(BaseChatGPT):
+#     model = "openai/gpt-4"
+
+# class GPT4o(BaseChatGPT):
+#     model = "openai/gpt-4o"
+
+# class GPT35(BaseChatGPT):
+#     model = "openai/gpt-3.5-turbo"
+
+model_name = 'openai/gpt-4o'
 timeout_bot_msg = '[Local Message] Request timeout. Network error. Please check proxy settings in config.py.' + \
                   '网络错误，检查代理服务器是否可用，以及代理设置的格式是否正确，格式须是[协议]://[地址]:[端口]，缺一不可。'
 
@@ -15,7 +25,7 @@ def request_model(model, messages, engine=None, **kwargs):
     """统一的请求模型函数"""
     result = yshs.LLM.chat(
             model=model,  # 模型名称，例如 "openai/gpt-4", 可通过 list_models.py 查看可用模型
-            engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
+            # engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
             messages=messages,  # 一个会话的消息列表
             stream=True,  # 是否以流式的方式返回结果
             **kwargs  # 其他参数
@@ -34,7 +44,7 @@ def request_gpt35(messages):
     return request_model(model, messages=messages)
 
 def request_gpt4(messages):
-    model = "openai/gpt-4"
+    model = "openai/gpt-4o"
     engine = 'gpt-4-1106-preview'
     return request_model(model, messages=messages, engine=engine)
 
@@ -55,11 +65,11 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history=[], sys_prompt="",
     if validate_key() is False:
         raise RuntimeError('请配置YSHS模型的YSHS_APPID')
     messages = generate_message(inputs, history, sys_prompt)
-    model = "openai/gpt-4"
+    model = "openai/gpt-4o"
     engine = 'gpt-4-1106-preview'
     result = yshs.LLM.chat(
             model=model,  # 模型名称，例如 "openai/gpt-4", 可通过 list_models.py 查看可用模型
-            engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
+            # engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
             messages=messages,  # 一个会话的消息列表
             stream=True,  # 是否以流式的方式返回结果
         )
@@ -93,11 +103,11 @@ def predict(inputs, llm_kwargs, plugin_kwargs, chatbot, history=[], system_promp
         inputs, history = handle_core_functionality(additional_fn, inputs, history, chatbot)
 
     messages = generate_message(inputs, history, system_prompt)
-    model = "openai/gpt-4"
+    model = "openai/gpt-4o"
     engine = 'gpt-4-1106-preview'
     result = yshs.LLM.chat(
             model=model,  # 模型名称，例如 "openai/gpt-4", 可通过 list_models.py 查看可用模型
-            engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
+            # engine=engine,  # 引擎名称, 可选参数，例如 "gpt-4-1106-preview"
             messages=messages,  # 一个会话的消息列表
             stream=True,  # 是否以流式的方式返回结果
         )
